@@ -1,0 +1,52 @@
+[2024-08-01 23:33:22,182][__main__][INFO] - Run testing for all electrodes in all test_subjects
+[2024-08-01 23:33:22,184][__main__][INFO] - exp:
+  runner:
+    lr: 0.0001
+    optim: LAMB
+    train_batch_size: 256
+    valid_batch_size: 256
+    shuffle: false
+    multi_gpu: true
+    device: cuda
+    total_steps: 500000
+    num_workers: 64
+    log_step: 1000
+    checkpoint_step: 1000
+    grad_clip: 1.0
+    scheduler:
+      name: ramp_up
+      total_steps: 500000
+      warmup: 0.025
+data:
+  name: masked_tf_dataset
+  val_split: 0.01
+  data: /path/to/data
+  test_split: 0.01
+model:
+  name: masked_tf_model
+  hidden_dim: 768
+  layer_dim_feedforward: 3072
+  layer_activation: gelu
+  nhead: 12
+  encoder_num_layers: 6
+  input_dim: 40
+task:
+  name: spec_pretrain
+  mask_type: fixed
+  time_mask_consecutive_min: 1
+  time_mask_consecutive_max: 5
+  freq_mask_consecutive_min: 1
+  freq_mask_consecutive_max: 2
+  time_mask_p: 0.05
+  freq_mask_p: 0.05
+criterion:
+  name: pretrain_masked_criterion
+  alpha: 2
+preprocessor:
+  name: stft
+  freq_channel_cutoff: 40
+  nperseg: 400
+  noverlap: 350
+  normalizing: zscore
+
+[2024-08-01 23:33:22,185][__main__][INFO] - Working directory /Users/yeroc/Desktop/BrainBERT/outputs/2024-08-01/23-33-22
